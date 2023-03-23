@@ -1,6 +1,7 @@
 package handle
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -21,6 +22,7 @@ func SaveUrl(c echo.Context) error {
 	link := model.NewLink(url)
 	err := db.AddLink(link)
 	if err != nil {
+		fmt.Println(err)
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
 	}
 	return c.String(http.StatusOK, "Your Shortened link is "+c.Request().Host+"/"+link.Hash)

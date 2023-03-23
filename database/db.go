@@ -14,7 +14,7 @@ const (
 	port     = 5432
 	user     = "calgor"
 	password = "ami1r3ali"
-	dbname   = "calhounio_demo"
+	dbname   = "urlshort"
 )
 
 var db *sql.DB
@@ -35,13 +35,13 @@ func Connect() (*sql.DB, error) {
 func AddLink(link *model.Link) error {
 	db, err := Connect()
 	if err != nil {
-		return errors.New("Internal Server Error")
+		return err
 	}
 	defer db.Close()
-	sqlstt := `INSERT INTO links (address,hash,used_times) VALUES ($1,$2,$3)`
+	sqlstt := `INSERT INTO link (address,hash,usedtimes) VALUES ($1,$2,$3)`
 	_, err = db.Exec(sqlstt, link.Address, link.Hash, link.UsedTimes)
 	if err != nil {
-		return errors.New("Internal Server Error")
+		return err
 	}
 	return nil
 }
@@ -49,14 +49,14 @@ func AddLink(link *model.Link) error {
 func GetLink(hash string) (*model.Link, error) {
 	db, err := Connect()
 	if err != nil {
-		return nil, errors.New("Internal Server Error")
+		return nil, err
 	}
 	defer db.Close()
-	sqlstt := `SELECT * FROM links WHERE hash=$1`
+	sqlstt := `SELECT * FROM link WHERE hash=$1`
 	var link model.Link
 	err = db.QueryRow(sqlstt, hash).Scan(&link.Address, &link.Hash, &link.UsedTimes)
 	if err != nil {
-		return nil, errors.New("Internal Server Error")
+		return nil, err
 	}
 	return &link, nil
 }
@@ -67,7 +67,7 @@ func DeleteLink(hash string) error {
 		return errors.New("Internal Server Error")
 	}
 	defer db.Close()
-	sqlstt := `DELETE FROM links WHERE hash=$1`
+	sqlstt := `DELETE FROM link WHERE hash=$1`
 	_, err = db.Exec(sqlstt, hash)
 	if err != nil {
 		return errors.New("Internal Server Error")
@@ -78,13 +78,10 @@ func DeleteLink(hash string) error {
 func IncrementUsage(hash string) error {
 	db, err := Connect()
 	if err != nil {
-		return errors.New("Internal Server Error")
+		return err
 	}
 	defer db.Close()
-	sqlstt := `UPDATE links SET used_times=used_times+1 WHERE hash=$1`
+	sqlstt := `UPDATE link SET usedtimes=usedtimes+1 WHERE hash=$1`
 	_, err = db.Exec(sqlstt, hash)
-	if err != nil {
-		return errors.New("Internal Server Error")
-	}
-	return nil
+	return err
 }
