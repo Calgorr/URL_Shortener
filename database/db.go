@@ -60,3 +60,17 @@ func GetLink(hash string) (*model.Link, error) {
 	}
 	return &link, nil
 }
+
+func DeleteLink(hash string) error {
+	db, err := Connect()
+	if err != nil {
+		return errors.New("Internal Server Error")
+	}
+	defer db.Close()
+	sqlstt := `DELETE FROM links WHERE hash=$1`
+	_, err = db.Exec(sqlstt, hash)
+	if err != nil {
+		return errors.New("Internal Server Error")
+	}
+	return nil
+}
