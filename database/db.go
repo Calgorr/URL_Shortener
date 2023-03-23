@@ -19,7 +19,7 @@ const (
 
 var db *sql.DB
 
-func Connect() (*sql.DB, error) {
+func connect() (*sql.DB, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -32,8 +32,8 @@ func Connect() (*sql.DB, error) {
 	return db, err
 }
 
-func AddLink(link *model.Link) error {
-	db, err := Connect()
+func addLink(link *model.Link) error {
+	db, err := connect()
 	if err != nil {
 		return err
 	}
@@ -46,8 +46,8 @@ func AddLink(link *model.Link) error {
 	return nil
 }
 
-func GetLink(hash string) (*model.Link, error) {
-	db, err := Connect()
+func getLink(hash string) (*model.Link, error) {
+	db, err := connect()
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +61,8 @@ func GetLink(hash string) (*model.Link, error) {
 	return &link, nil
 }
 
-func DeleteLink(hash string) error {
-	db, err := Connect()
+func deleteLink(hash string) error {
+	db, err := connect()
 	if err != nil {
 		return errors.New("Internal Server Error")
 	}
@@ -76,7 +76,7 @@ func DeleteLink(hash string) error {
 }
 
 func IncrementUsage(hash string) error {
-	db, err := Connect()
+	db, err := connect()
 	if err != nil {
 		return err
 	}
