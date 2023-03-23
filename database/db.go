@@ -74,3 +74,17 @@ func DeleteLink(hash string) error {
 	}
 	return nil
 }
+
+func IncrementUsage(hash string) error {
+	db, err := Connect()
+	if err != nil {
+		return errors.New("Internal Server Error")
+	}
+	defer db.Close()
+	sqlstt := `UPDATE links SET used_times=used_times+1 WHERE hash=$1`
+	_, err = db.Exec(sqlstt, hash)
+	if err != nil {
+		return errors.New("Internal Server Error")
+	}
+	return nil
+}
