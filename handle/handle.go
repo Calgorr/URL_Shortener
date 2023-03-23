@@ -30,13 +30,13 @@ func SaveUrl(c echo.Context) error {
 
 func Redirect(c echo.Context) error {
 	var err error
-	var link *model.Link
+	var address string
 	if c.Param("hash") != "" {
 		hash := c.Param("hash")
-		link, err = db.GetLink(hash)
-		if link.Address != "" {
+		address, err = db.GetLink(hash)
+		if address != "" {
 			db.IncrementUsage(hash)
-			err = c.Redirect(http.StatusTemporaryRedirect, link.Address)
+			err = c.Redirect(http.StatusTemporaryRedirect, address)
 		} else {
 			err = c.String(http.StatusBadRequest, "Invalid url")
 		}
