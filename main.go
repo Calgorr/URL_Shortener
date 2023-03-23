@@ -11,4 +11,5 @@ func main() {
 	e.GET("/:hash", handle.Redirect)
 	e.POST("/new", handle.SaveUrl)
 	e.Use(middleware.Logger())
+	e.Start(":8080")
 }
