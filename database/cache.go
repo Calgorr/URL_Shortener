@@ -33,3 +33,11 @@ func GetLink(hash string) (string, error) {
 	rdb.Set(ctx, hash, link.Address, 0)
 	return link.Address, nil
 }
+
+func DeleteLink(hash string) error {
+	err := deleteLink(hash)
+	if err != nil {
+		return err
+	}
+	return rdb.Do(ctx, "DEL", hash).Err()
+}
