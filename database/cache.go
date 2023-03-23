@@ -15,7 +15,7 @@ var rdb = redis.NewClient(&redis.Options{
 })
 
 func AddLink(link *model.Link) error {
-	if rdb.Get(ctx, link.Address) != nil {
+	if rdb.Get(ctx, link.Address).Val() != "" {
 		return nil
 	}
 	addLink(link)
